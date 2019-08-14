@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bawei.dao.ZhiDao">
+	<select id="findAll" resultType="Zhi">
+		select z.*,g.`gname` from `zhi` z
+		join `zhi_garden` zg on z.`zid`=zg.`zid`
+		join`garden` g on zg.`gid`=g.`gid`
+		<where>
+			<if test="zname != null">
+				and z.zname like concat('%',#{zname},'%')
+			</if>
+		</where>
+	</select>
+	<select id="findAllById" resultType="Zhi">
+		select z.*,g.`gname` from `zhi` z
+		join `zhi_garden` zg on z.`zid`=zg.`zid`
+		join`garden` g on zg.`gid`=g.`gid`
+		where z.zid=#{zid}
+	</select>
+	<delete id="delete">
+		DELETE  FROM zhi WHERE zid=#{zid}
+	</delete>
+	
+	<insert id="add" parameterType="Zhi" useGeneratedKeys="true" keyProperty="zid">
+		INSERT INTO `zhi` VALUES(default,#{zname},#{zms})
+	</insert>
+	
+	<insert id="addsg">
+		insert into zhi_garden values(#{zid},#{gid});
+	</insert>
+	
+	<update id="update" parameterType="Zhi">
+		update zhi set `zname`=#{zname},`zms`=#{zms} where zid=#{zid}
+	</update>
+	
+	<delete id="deletegs">
+		delete from zhi_garden where zid=#{zid}
+	</delete>
+	
+</mapper>
